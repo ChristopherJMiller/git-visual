@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    script(src="/gitgraph/gitgraph.min.js")
+    title #{title}
+  body
+    canvas(id='gitGraph')
+    script.
+      let data = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
+      let template = {
+        template: "blackarrow",
+        author: ""
+      };
+      let gitgraph = new GitGraph(template);
+      let master = gitgraph.branch("master");
+      master.commit("This commit is mine!");

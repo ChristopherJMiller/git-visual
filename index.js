@@ -3,11 +3,12 @@ const app = express()
 const port = 3000
 
 app.set('view engine', 'pug')
+app.use('/gitgraph/', express.static('node_modules/gitgraph.js/build/'))
 
 const gitlog = require('gitlog')
 
 app.get('/*', function (req, res) {
-  if (req.path === "/favicon.ico")
+  if (req.path === "/favicon.ico" || req.path === "/chart.js" || req.path === "/node_modules/gitgraph.js/build/gitgraph.min.js")
     return
   const options =
     { repo: __dirname + req.path
@@ -25,7 +26,7 @@ app.get('/*', function (req, res) {
     };
   console.log(__dirname + req.path)
   let commits = gitlog(options);
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
+  res.render('index', { title: __dirname + req.path, data: commits })
 })
 
 app.listen(port)
