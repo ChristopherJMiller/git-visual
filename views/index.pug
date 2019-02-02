@@ -7,10 +7,18 @@ html
     canvas(id='gitGraph')
     script.
       let data = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
+      console.log(data)
       let template = {
         template: "blackarrow",
         author: ""
       };
       let gitgraph = new GitGraph(template);
-      let master = gitgraph.branch("master");
-      master.commit("This commit is mine!");
+      let master = gitgraph.branch();
+      commits = []
+      parentTree = []
+      for (let i = data.length - 1; i >= 0; i--) {
+        master.commit({
+          message: data[i].subject,
+          author: data[i].authorName
+        })
+      }

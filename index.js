@@ -11,20 +11,22 @@ app.get('/*', function (req, res) {
   if (req.path === "/favicon.ico" || req.path === "/chart.js" || req.path === "/node_modules/gitgraph.js/build/gitgraph.min.js")
     return
   const options =
-    { repo: __dirname + req.path
-    , number: 20
-    , fields:
+    { repo: __dirname + '/..' + req.path
+    , number: 50,
+    all: true,
+    fields:
       [ 'hash'
       , 'abbrevHash'
       , 'subject'
-      , 'authorName'
+      , 'authorName',
+      'parentHashes'
       , 'authorDateRel'
       ]
     , execOptions:
       { maxBuffer: 1000 * 1024
       }
     };
-  console.log(__dirname + req.path)
+  console.log(__dirname + '..' + req.path)
   let commits = gitlog(options);
   res.render('index', { title: __dirname + req.path, data: commits })
 })
