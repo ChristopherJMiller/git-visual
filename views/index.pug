@@ -10,15 +10,25 @@ html
       console.log(data)
       let template = {
         template: "blackarrow",
+        orientation: 'vertical-reverse',
         author: ""
-      };
-      let gitgraph = new GitGraph(template);
-      let master = gitgraph.branch();
-      commits = []
-      parentTree = []
-      for (let i = data.length - 1; i >= 0; i--) {
-        master.commit({
-          message: data[i].subject,
-          author: data[i].authorName
-        })
+      }
+      let gitgraph = new GitGraph(template)
+      let branches = {}
+      for (let branch in data) {
+        branches[branch] = gitgraph.branch(branch)
+      }
+      let branchKeys = Object.keys(branches)
+      for (let i = 0; i < branchKeys.length; i++) {
+        let branch = branches[branchKeys[i]]
+        let commits = data[branchKeys[i]]
+        for (let j in commits) {
+          let commit = commits[j]
+          branch.commit({
+            message: commit.subject,
+            author: commit.authorName,
+            sha1: commit.abbrevHash,
+            type: commit.abbrevParentHashes > 40 ? "mergeCommit" : null
+          })
+        }
       }
